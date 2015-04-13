@@ -23,7 +23,7 @@ namespace MiniChef
             InitializeComponent();
 
             CarregaReceitas();
-
+            //teste commit
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
         }
