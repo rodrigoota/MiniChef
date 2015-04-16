@@ -10,6 +10,9 @@ using Microsoft.Phone.Shell;
 using MiniChef.Resources;
 using Parse;
 using MiniChef.Model;
+using Windows.Networking.Connectivity;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MiniChef
 {
@@ -17,56 +20,128 @@ namespace MiniChef
     {
         IEnumerable<ParseObject> receitas;
         List<ReceitaModel> listaReceitas = new List<ReceitaModel>();
+        List<CategoriaModel> listaCategorias = new List<CategoriaModel>();
+        List<IngredienteModel> listaIngredientes = new List<IngredienteModel>();
+
         // Constructor
         public MainPage()
         {
             InitializeComponent();
 
-            CarregaReceitas();
-            //teste commit
-            // Sample code to localize the ApplicationBar
-            //BuildLocalizedApplicationBar();
+
+            if (getIsInternetAccessAvailable())
+            {
+                CarregaBanco();
+            }
+            else
+            {
+                MessageBox.Show("Sem acesso à internet. Favor verificar.");
+            }
+
         }
 
-        protected async void CarregaReceitas()
+        protected async void CarregaBanco()
         {
             ParseQuery<ParseObject> query = ParseObject.GetQuery("RECEITAS");
             receitas = await query.FindAsync();
 
-
             ReceitaModel receita;
+            CategoriaModel categoria;
+            IngredienteModel ingrediente;
 
             foreach (ParseObject receitaParse in receitas)
             {
-                receita = new ReceitaModel()
+                receita = new ReceitaModel();
+
+                receita.nome = receitaParse.Get<string>("nome");
+                receita.descricao = receitaParse.Get<string>("descricao");
+                receita.data = receitaParse.UpdatedAt;
+                receita.tempo = receitaParse.Get<int>("tempo");
+                receita.nota = receitaParse.Get<int>("nota");
+
+                //foto
+                try
                 {
-                    nome = receitaParse.Get<string>("nome"),
-                    descricao = receitaParse.Get<string>("descricao")
-                    //foto = receitaParse.Get<string>("foto")
-                };
+                    ParseFile fotoFile = receitaParse.Get<ParseFile>("foto");
+                    receita.foto = fotoFile.Url.ToString();
+
+                    /* baixar imagem por url
+                    Image myImage = new Image();
+                    myImage.Source = new BitmapImage(new Uri(receita.foto, UriKind.Absolute));
+                    LayoutRoot.Children.Add(myImage); */
+                } 
+                catch
+                {
+                    receita.foto = "sem imagem";
+                }
+
+
+                //categoria
+                List<CategoriaModel> listaCat = new List<CategoriaModel>();
+
+                IList<string> categoriasParse = receitaParse.Get<IList<string>>("categorias");
+
+                foreach (String catParse in categoriasParse)
+                {
+                    categoria = new CategoriaModel();
+                    categoria.descricao = catParse;
+
+                    if (!listaCategorias.Contains(categoria))
+                    {
+                        listaCategorias.Add(categoria);
+                    }
+
+                    listaCat.Add(categoria);
+                    
+                }
+                receita.categorias = listaCat;
+
+
+                //ingredientes
+                List<IngredienteModel> listaIng = new List<IngredienteModel>();
+
+                IList<string> ingredientesParse = receitaParse.Get<IList<string>>("ingredientes");
+
+                foreach (String ingParse in ingredientesParse)
+                {
+                    ingrediente = new IngredienteModel();
+                    ingrediente.descricao = ingParse;
+                    string[] IngSep = ingParse.Split(';');
+
+                    ingrediente.descricao = IngSep[0];
+                    ingrediente.quantidade = Double.Parse(IngSep[1]);
+                    ingrediente.unidadeMedida = IngSep[2];
+
+                    if (!listaIngredientes.Contains(ingrediente))
+                    {
+                        listaIngredientes.Add(ingrediente);
+                    }
+
+                    listaIng.Add(ingrediente);
+
+                }
+                receita.ingredientes = listaIng;
+
+
                 listaReceitas.Add(receita);
             }
 
             lstReceitas.ItemsSource = listaReceitas;
+            //lstReceitas.ItemsSource = listaCategorias;
+            //lstReceitas.ItemsSource = listaIngredientes;
 
         }
 
-        // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
-
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
-
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
-
+        public static bool getIsInternetAccessAvailable()
+        {
+            switch (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel())
+            {
+                case NetworkConnectivityLevel.InternetAccess:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
     }
 }

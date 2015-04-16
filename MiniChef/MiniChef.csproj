@@ -98,6 +98,10 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\CategoriaModel.cs" />
+    <Compile Include="Model\IngredienteModel.cs" />
+    <Compile Include="Model\ItemIngredienteModel.cs" />
+    <Compile Include="Model\ReceitaCategoriaModel.cs" />
     <Compile Include="Model\ReceitaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -134,7 +138,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\BadgeLogo.png" />
-    <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\Buttons\img_btn_carne.png" />
+    <Content Include="Assets\Buttons\img_btn_lanche.png" />
+    <Content Include="Assets\Buttons\img_btn_massa.png" />
+    <Content Include="Assets\Buttons\img_btn_petisco.png" />
+    <Content Include="Assets\Buttons\img_btn_refeicao_completa.png" />
+    <Content Include="Assets\Buttons\img_btn_salada.png" />
+    <Content Include="Assets\Buttons\img_btn_sobremesa.png" />
+    <Content Include="Assets\Buttons\img_btn_sopa.png" />
+    <Content Include="Assets\logo.png" />
+    <Content Include="Assets\LogoAntigo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\SquareTile150x150.png" />
     <Content Include="Assets\SquareTile71x71.png" />
@@ -155,6 +168,8 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ic_launcher.png" />
+    <Content Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">

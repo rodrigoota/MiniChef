@@ -11,12 +11,12 @@ namespace MiniChef.Model
         public int id { get; set; }
         public string nome { get; set; }
         public string descricao { get; set; }
-        public DateTime data { get; set; }
-        //private List<IngredienteVO> ingredientes;
+        public DateTime? data { get; set; }
+        public List<IngredienteModel> ingredientes { get; set; }
         public int tempo { get; set; }
         public int nota { get; set; }
         public string categoria { get; set; }
-        //private List<CategoriaVO> categorias;
+        public List<CategoriaModel> categorias { get; set; }
         public string foto { get; set; }
     }
 }

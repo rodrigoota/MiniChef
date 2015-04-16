@@ -71,9 +71,11 @@ namespace MiniChef
         // This code will not execute when the application is reactivated
         private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            /*
             var testObject = new ParseObject("TestObject");
             testObject["foo"] = "bar";
-            await testObject.SaveAsync();
+            await testObject.SaveAsync(); 
+             */
         }
 
         // Code to execute when the application is activated (brought to foreground)
