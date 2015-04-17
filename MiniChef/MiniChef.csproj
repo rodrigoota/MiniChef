@@ -94,6 +94,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\CategoriaDAO.cs" />
+    <Compile Include="Data\IngredienteDAO.cs" />
+    <Compile Include="Data\ItemIngredienteDAO.cs" />
+    <Compile Include="Data\MinichefDbContext.cs" />
+    <Compile Include="Data\ReceitaCategoriaDAO.cs" />
+    <Compile Include="Data\ReceitaDAO.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

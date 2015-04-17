@@ -13,6 +13,7 @@ using MiniChef.Model;
 using Windows.Networking.Connectivity;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MiniChef.Data;
 
 namespace MiniChef
 {
@@ -23,14 +24,26 @@ namespace MiniChef
         List<CategoriaModel> listaCategorias = new List<CategoriaModel>();
         List<IngredienteModel> listaIngredientes = new List<IngredienteModel>();
 
+        ProgressIndicator progressIndicator;
+
         // Constructor
         public MainPage()
         {
             InitializeComponent();
 
+            MinichefDbContext.CreateDataBase();
 
             if (getIsInternetAccessAvailable())
             {
+                progressIndicator = new ProgressIndicator()
+                {
+                    IsVisible = true,
+                    IsIndeterminate = false,
+                    Text = "Carregando base. Aguarde..."
+                };
+
+                SystemTray.SetProgressIndicator(this, progressIndicator);
+
                 CarregaBanco();
             }
             else
@@ -89,6 +102,7 @@ namespace MiniChef
                     if (!listaCategorias.Contains(categoria))
                     {
                         listaCategorias.Add(categoria);
+                        CategoriaDAO.Save(categoria);
                     }
 
                     listaCat.Add(categoria);
@@ -115,6 +129,7 @@ namespace MiniChef
                     if (!listaIngredientes.Contains(ingrediente))
                     {
                         listaIngredientes.Add(ingrediente);
+                        IngredienteDAO.Save(ingrediente);
                     }
 
                     listaIng.Add(ingrediente);
@@ -124,11 +139,15 @@ namespace MiniChef
 
 
                 listaReceitas.Add(receita);
+                //ReceitaDAO.Save(receita); //verificar esta com erro
             }
 
-            lstReceitas.ItemsSource = listaReceitas;
+            //lstReceitas.ItemsSource = listaReceitas;
+            lstReceitas.ItemsSource = IngredienteDAO.GetIngredientes();
             //lstReceitas.ItemsSource = listaCategorias;
             //lstReceitas.ItemsSource = listaIngredientes;
+
+            progressIndicator.IsVisible = false;
 
         }
 
